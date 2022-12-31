@@ -1,0 +1,86 @@
+@font-face {
+	font-family: fluent-icons;
+	src: url("../fonts/Segoe Fluent Icons.ttf");
+}
+
+body {
+	font-family: var(--body-font);
+	display: flexbox;
+}
+
+.fluent-font {
+	font-family: fluent-icons;
+}
+
+.close-pop-btn {
+	float: right;
+	float: top;
+}
+
+h2 {
+	margin: 0.5%;
+}
+
+fluent-tabs {
+	height: 100%;
+}
+
+fluent-card {
+	display: flex;
+	flex-flow: column;
+	overflow-y: auto;
+}
+
+.dashboard {
+	display: flex;
+	flex-flow: wrap;
+	padding: 1%;
+}
+
+.dashboard-item {
+	min-width: min-content;
+	min-height: min-content;
+	max-width: 30%;
+	max-height: 45%;
+	margin: 1%;
+	padding: 1%;
+	transition-duration: 0.05s;
+	overflow-y: hidden;
+}
+
+.dashboard-item:hover {
+	cursor: pointer;
+	transform: scale(1.05);
+}
+
+#files-ops-wrap {
+	display: flex;
+	padding: 0.5%;
+}
+
+#files-ops-wrap * {
+	margin: 0.25%;
+}
+
+fluent-data-grid-row:hover,
+fluent-tab:hover,
+fluent-button:hover,
+fluent-card:hover {
+	box-shadow: 0 0 5px grey;
+}
+
+/* fluent-card:not(:has(fluent-card:hover)):hover {
+	box-shadow: 0 0 5px gray;
+}
+ */
+.clickable {
+	cursor: pointer;
+}
+
+.close-btn {
+	font-size: var(--type-ramp-minus-1-font-size);
+}
+
+/* #files-ops-wrap fluent-design-system-provider {
+	margin: 0.25%;
+} */

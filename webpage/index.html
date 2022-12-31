@@ -1,0 +1,231 @@
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ESP32 Wireless Hub</title>
+	<script id="rand" type="module" src="assets/js/web-components.min.js"></script>
+	<link rel="stylesheet" href="assets/css/styles.css">
+	<link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
+</head>
+
+<body>
+	<fluent-design-system-provider use-defaults, density="1">
+		<fluent-card>
+			<h2>Wireless Hub Client Portal</h2>
+			<fluent-card>
+				<fluent-tabs id="tab-main" orientation="vertical">
+					<fluent-tab>
+						<span class="fluent-font">&#xf246;</span><span class="tab-txt">&ensp;Dashboard</span>
+					</fluent-tab>
+					<fluent-tab>
+						<span class="fluent-font">&#xec50;</span><span class="tab-txt">&ensp;File Explorer</span>
+					</fluent-tab>
+					<fluent-tab>
+						<span class="fluent-font">&#xe957;</span><span class="tab-txt">&ensp;Sensors</span>
+					</fluent-tab>
+					<fluent-tab>
+						<span class="fluent-font">&#xe8f2;</span><span class="tab-txt">&ensp;Messaging</span>
+					</fluent-tab>
+					<fluent-tab>
+						<span class="fluent-font">&#xe7e7;</span><span class="tab-txt">&ensp;Notification</span>
+					</fluent-tab>
+					<fluent-tab>
+						<span class="fluent-font">&#xe713;</span><span class="tab-txt">&ensp;Settings</span>
+					</fluent-tab>
+					<fluent-tab>
+						<span class="fluent-font">&#xe77b;</span><span class="tab-txt">&ensp;Account</span>
+					</fluent-tab>
+
+					<fluent-tab-panel>
+						<fluent-card class="dashboard">
+							<fluent-card class="dashboard-item" title="Getting Started">
+								<h3>Getting Started</h3>
+								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ac faucibus
+									elit. Phasellus et mauris sed lectus aliquet ultricies et eget libero. Lorem ipsum
+									dolor sit amet, consectetur adipiscing elit. Nam urna purus, egestas eget egestas
+									nec, dignissim sed enim. Nulla eget dictum nunc, vel egestas erat. Vestibulum ornare
+									eu velit ac mattis. Fusce tempus, ipsum a gravida dapibus, libero ipsum porta quam,
+									a maximus mi lorem sit amet tellus. Morbi a lacinia ligula. Integer vehicula, elit
+									vitae imperdiet condimentum, enim risus bibendum leo, sit amet tempus metus tellus
+									at dolor. Ut egestas, sapien eget molestie placerat, ligula metus volutpat enim, et
+									egestas lorem dolor sed libero. Maecenas euismod maximus leo at convallis. Cras
+									molestie, ligula ac vulputate viverra, odio velit sagittis augue, in pharetra lectus
+									sem eu quam. Nam est massa, eleifend eget convallis in, porttitor in lorem.en from
+									text that reads, "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
+									consectetur, adipisci velit ...," which translates as, "There is no one who loves
+								</p>
+							</fluent-card>
+							<fluent-card class="dashboard-item"></fluent-card>
+							<fluent-card class="dashboard-item"></fluent-card>
+							<fluent-card class="dashboard-item"></fluent-card>
+							<fluent-card class="dashboard-item"></fluent-card>
+							<fluent-card class="dashboard-item"></fluent-card>
+							<fluent-card class="dashboard-item"></fluent-card>
+							<fluent-card class="dashboard-item"></fluent-card>
+							<fluent-dialog id="dashboard-pop" hidden>
+								<fluent-design-system-provider class="close-pop-btn" density="-1"
+									accent-base-color="#D83B01">
+									<fluent-button appearance="accent" class="close-pop-btn close-btn"
+										id="close-dashboard-pop-btn">
+										<span class="fluent-font">&#xef2c;</span>
+									</fluent-button>
+								</fluent-design-system-provider>
+								<h2 id="dashboard-pop-title">Upload Files</h2>
+							</fluent-dialog>
+						</fluent-card>
+					</fluent-tab-panel>
+
+					<fluent-tab-panel>
+						<fluent-card>
+							<div id="files-ops-wrap">
+								<fluent-button id="select-files-btn">
+									<span class="fluent-font">&#xe762;</span>&ensp;Select
+								</fluent-button>
+
+								<fluent-design-system-provider accent-base-color="#107C10">
+									<fluent-button id="download-files-btn" appearance="accent" hidden>
+										<span class="fluent-font">&#xebd3;</span>&ensp;Download
+									</fluent-button>
+								</fluent-design-system-provider>
+
+								<fluent-design-system-provider accent-base-color="#D83B01">
+									<fluent-button id="delete-files-btn" appearance="accent" hidden>
+										<span class="fluent-font">&#xe74d;</span>&ensp;Delete
+									</fluent-button>
+								</fluent-design-system-provider>
+
+								<fluent-button id="upload-files-btn">
+									<span class="fluent-font">&#xe898;</span>&ensp;Upload
+								</fluent-button>
+							</div>
+
+							<fluent-card><fluent-data-grid id="files-grid"></fluent-data-grid></fluent-card>
+
+							<fluent-dialog id="upload-files-pop" hidden>
+								<fluent-design-system-provider class="close-pop-btn" density="-1"
+									accent-base-color="#D83B01">
+									<fluent-button appearance="accent" class="close-pop-btn close-btn"
+										id="close-upload-pop-btn">
+										<span class="fluent-font">&#xef2c;</span>
+									</fluent-button>
+								</fluent-design-system-provider>
+								<h2>Upload Files</h2>
+							</fluent-dialog>
+						</fluent-card>
+					</fluent-tab-panel>
+
+					<fluent-tab-panel>
+						<fluent-card>
+
+						</fluent-card>
+					</fluent-tab-panel>
+
+					<fluent-tab-panel>
+						<fluent-card>
+							<fluent-tabs id="tab-main-msg" orientation="vertical">
+								<fluent-tab>
+									<span class="fluent-font">&#xe715;</span><span class="tab-txt">&ensp;Mail</span>
+								</fluent-tab>
+								<fluent-tab>
+									<span class="fluent-font">&#xe723;</span>
+									<span class="tab-txt">&ensp;Attachments</span>
+								</fluent-tab>
+								<fluent-tab>
+									<span class="fluent-font">&#xe779;</span><span class="tab-txt">&ensp;Contacts</span>
+								</fluent-tab>
+
+								<fluent-tab-panel>
+									<fluent-card>
+
+									</fluent-card>
+								</fluent-tab-panel>
+
+								<fluent-tab-panel>
+									<fluent-card>
+
+									</fluent-card>
+								</fluent-tab-panel>
+
+								<fluent-tab-panel>
+									<fluent-card>
+
+									</fluent-card>
+								</fluent-tab-panel>
+
+							</fluent-tabs>
+						</fluent-card>
+					</fluent-tab-panel>
+
+					<fluent-tab-panel>
+						<fluent-card>
+
+						</fluent-card>
+					</fluent-tab-panel>
+
+					<fluent-tab-panel>
+						<fluent-card>
+							<fluent-tabs id="tab-main-settings" orientation="vertical">
+								<fluent-tab>
+									<span class="fluent-font">&#xe772;</span><span class="tab-txt">&ensp;Device</span>
+								</fluent-tab>
+								<fluent-tab>
+									<span class="fluent-font">&#xe713;</span><span class="tab-txt">&ensp;General</span>
+								</fluent-tab>
+								<fluent-tab>
+									<span class="fluent-font">&#xe946;</span><span class="tab-txt">&ensp;About</span>
+								</fluent-tab>
+
+								<fluent-tab-panel><fluent-card>
+
+									</fluent-card></fluent-tab-panel>
+
+								<fluent-tab-panel><fluent-card>
+
+									</fluent-card></fluent-tab-panel>
+
+								<fluent-tab-panel><fluent-card>
+
+									</fluent-card></fluent-tab-panel>
+							</fluent-tabs>
+						</fluent-card>
+					</fluent-tab-panel>
+
+					<fluent-tab-panel>
+						<fluent-card>
+							<fluent-tabs id="tab-main-account" orientation="vertical">
+								<fluent-tab>
+									<span class="fluent-font">&#xee57;</span><span class="tab-txt">&ensp;Profile</span>
+								</fluent-tab>
+								<fluent-tab>
+									<span class="fluent-font">&#xe771;</span>
+									<span class="tab-txt">&ensp;Customise</span>
+								</fluent-tab>
+								<fluent-tab>
+									<span class="fluent-font">&#xe730;</span><span class="tab-txt">&ensp;Security</span>
+								</fluent-tab>
+
+								<fluent-tab-panel><fluent-card>
+
+									</fluent-card></fluent-tab-panel>
+
+								<fluent-tab-panel><fluent-card>
+
+									</fluent-card></fluent-tab-panel>
+
+								<fluent-tab-panel><fluent-card>
+
+									</fluent-card></fluent-tab-panel>
+							</fluent-tabs>
+						</fluent-card>
+					</fluent-tab-panel>
+				</fluent-tabs>
+			</fluent-card>
+		</fluent-card>
+	</fluent-design-system-provider>
+</body>
+
+<script src="assets/js/script.js"></script>
+
+</html>
