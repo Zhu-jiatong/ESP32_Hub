@@ -6,6 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ESP32 Wireless Hub</title>
 	<script id="rand" type="module" src="assets/js/web-components.min.js"></script>
+	<script src="assets/js/utils.js"></script>
+	<script src="assets/modules/file-upload-form/file-upload-form.js"></script>
 	<link rel="stylesheet" href="assets/css/styles.css">
 	<link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
 </head>
@@ -81,27 +83,43 @@
 						<fluent-card>
 							<div id="files-ops-wrap">
 								<fluent-button id="select-files-btn">
-									<span class="fluent-font">&#xe762;</span>&ensp;Select
+									<span class="fluent-font">&#xe762;</span>
+									<fluent-tooltip anchor="select-files-btn">Select</fluent-tooltip>
 								</fluent-button>
 
 								<fluent-design-system-provider accent-base-color="#107C10">
 									<fluent-button id="download-files-btn" appearance="accent" hidden>
-										<span class="fluent-font">&#xebd3;</span>&ensp;Download
+										<span class="fluent-font">&#xebd3;</span>
 									</fluent-button>
+									<fluent-tooltip anchor="download-files-btn">Download</fluent-tooltip>
 								</fluent-design-system-provider>
 
 								<fluent-design-system-provider accent-base-color="#D83B01">
 									<fluent-button id="delete-files-btn" appearance="accent" hidden>
-										<span class="fluent-font">&#xe74d;</span>&ensp;Delete
+										<span class="fluent-font">&#xe74d;</span>
 									</fluent-button>
+									<fluent-tooltip anchor="delete-files-btn">Delete</fluent-tooltip>
 								</fluent-design-system-provider>
 
 								<fluent-button id="upload-files-btn">
-									<span class="fluent-font">&#xe898;</span>&ensp;Upload
+									<span class="fluent-font">&#xe898;</span>
 								</fluent-button>
+								<fluent-tooltip anchor="upload-files-btn">Upload</fluent-tooltip>
 							</div>
-
-							<fluent-card><fluent-data-grid id="files-grid"></fluent-data-grid></fluent-card>
+							<fluent-breadcrumb id="path-bar"></fluent-breadcrumb>
+							<fluent-card>
+								<table>
+									<thead>
+										<tr id="files_header">
+											<th></th>
+											<th>Name</th>
+											<th>Size</th>
+											<th>Date modified</th>
+										</tr>
+									</thead>
+									<tbody id="files_table"></tbody>
+								</table>
+							</fluent-card>
 
 							<fluent-dialog id="upload-files-pop" hidden>
 								<fluent-design-system-provider class="close-pop-btn" density="-1"
@@ -112,6 +130,7 @@
 									</fluent-button>
 								</fluent-design-system-provider>
 								<h2>Upload Files</h2>
+								<div id="upload-files-form"></div>
 							</fluent-dialog>
 						</fluent-card>
 					</fluent-tab-panel>

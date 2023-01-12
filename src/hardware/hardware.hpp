@@ -19,7 +19,7 @@ struct get_instance_ret
 
 namespace cst
 {
-	extern SDFS &SD_vspi, SD_hspi;
+	extern SDFS &SD_vspi, SD_hspi, &system_disk;
 	extern SD_info_t &SD_vspi_cfg, &SD_hspi_cfg;
 
 	void begin_SD();

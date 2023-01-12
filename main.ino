@@ -1,5 +1,5 @@
-#include "src/networking/networking.hpp"
 #include "src/hardware/hardware.hpp"
+#include "src/networking/networking.hpp"
 
 void setup()
 {

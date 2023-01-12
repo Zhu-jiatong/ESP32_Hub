@@ -47,13 +47,13 @@ namespace cst
         return ret_eth_addr;
     }
 
-    const SessionInfo_t &ESPSessionManager::handle_ap_ip(const uint32_t &ip)
+    const SessionInfo_t &ESPSessionManager::handle_ap_ip(const uint32_t &ip) // TODO: rewrite using std::optional
     {
         auto thisSession = ap_sessions.find(ip);
         return (thisSession != ap_sessions.end()) ? thisSession->second : emptySession;
     }
 
-    const SessionInfo_t &ESPSessionManager::handle_sta_ip(const uint32_t &ip)
+    const SessionInfo_t &ESPSessionManager::handle_sta_ip(const uint32_t &ip) // TODO: rewrite using std::optional
     {
         auto thisSession = sta_sessions.find(ip);
         if (thisSession != sta_sessions.end())
@@ -65,7 +65,7 @@ namespace cst
         return emptySession;
     }
 
-    const SessionInfo_t &ESPSessionManager::getSessionInfo(const IPAddress &localIP, const uint32_t &remoteAddr)
+    const SessionInfo_t &ESPSessionManager::getSessionInfo(const IPAddress &localIP, const uint32_t &remoteAddr) // TODO: rewrite using std::optional
     {
         if (isAP(localIP))
             return handle_ap_ip(remoteAddr);

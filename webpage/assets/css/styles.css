@@ -62,7 +62,7 @@ fluent-card {
 	margin: 0.25%;
 }
 
-fluent-data-grid-row:hover,
+tr:hover,
 fluent-tab:hover,
 fluent-button:hover,
 fluent-card:hover {
@@ -79,6 +79,14 @@ fluent-card:hover {
 
 .close-btn {
 	font-size: var(--type-ramp-minus-1-font-size);
+}
+
+table {
+	text-align: left;
+}
+
+.tbl_fsize {
+	text-align: right;
 }
 
 /* #files-ops-wrap fluent-design-system-provider {

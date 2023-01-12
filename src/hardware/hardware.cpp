@@ -2,7 +2,9 @@
 
 namespace cst
 {
-	SDFS &SD_vspi = SD, SD_hspi(FSImplPtr(new VFSImpl()));
+	SDFS &SD_vspi = SD,
+		 SD_hspi(FSImplPtr(new VFSImpl())),
+		 &system_disk = SD_vspi;
 	SPIClass hspi(HSPI);
 	SPIClass &vspi = SPI;
 
@@ -11,14 +13,14 @@ namespace cst
 
 	void begin_SD()
 	{
-		SD_vspi.begin(SD_vspi_cfg.CS, vspi, 80000000U, SD_vspi_cfg.mountpoint);
+		SD_vspi.begin(SD_vspi_cfg.CS, vspi, 80000000U, SD_vspi_cfg.mountpoint, 10);
 		hspi.begin(SD_hspi_cfg.SCK, SD_hspi_cfg.MISO, SD_hspi_cfg.MOSI, SD_hspi_cfg.CS);
-		SD_hspi.begin(SD_hspi_cfg.CS, hspi, 80000000U, SD_hspi_cfg.mountpoint);
+		SD_hspi.begin(SD_hspi_cfg.CS, hspi, 80000000U, SD_hspi_cfg.mountpoint, 10);
 	}
 
 	void load_cfg() {}
 
-	get_instance_ret get_instance(const char *mountpoint)
+	get_instance_ret get_instance(const char *mountpoint) // TODO: rewrite using std::optional
 	{
 		get_instance_ret temp{};
 		auto found_instance = std::find_if(disks.begin(), disks.end(), [&](SD_info_t this_disk)
