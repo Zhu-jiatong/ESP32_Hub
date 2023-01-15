@@ -2,10 +2,14 @@ const module_html_url = new URL("/assets/modules/file-upload-form/file-upload-fo
 fetch(module_html_url).then(res => res.text()).then(data => {
     _("upload-files-form").innerHTML = data;
 }).then(() => {
-    _("fileForm").addEventListener("change", e => uploadFormEvent(e));
+    _("fileForm").addEventListener("change", uploadFormEvent);
     _("upload-cover").addEventListener("click", e => {
         e.preventDefault();
         _("file-input").click();
+    });
+    _("fileForm").addEventListener('submit', e => {
+        e.preventDefault();
+        uploadFile();
     });
 });
 
@@ -52,7 +56,7 @@ function uploadFile() {
 }
 
 function progressHandler(e) {
-    _('loaded_n_total').textContent = 'Uploaded ' + e.loaded + '/' + e.total + ' bytes';
+    _('loaded_n_total').textContent = 'Uploaded ' + adjust_size(e.loaded) + '/' + adjust_size(e.total);
     _('progressBar').hidden = false;
     _('progressBar').max = e.total;
     _('progressBar').value = e.loaded;
@@ -63,6 +67,7 @@ function progressHandler(e) {
 function completeHandler(event) {
     _("status").textContent = "Upload Complete";
     _("progressBar").value = 0;
+    _('progressBar').hidden = true;
     _("status").textContent = "File Uploaded";
     dir_dom(current_dir);
 }

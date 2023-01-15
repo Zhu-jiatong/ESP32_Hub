@@ -89,6 +89,14 @@ table {
 	text-align: right;
 }
 
+#progressBar {
+	float: right;
+}
+
+fluent-dialog-inwrap {
+	padding: 1%;
+}
+
 /* #files-ops-wrap fluent-design-system-provider {
 	margin: 0.25%;
 } */

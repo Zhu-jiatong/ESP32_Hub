@@ -27,7 +27,7 @@ namespace cst
 	void get_login_info(AsyncWebServerRequest *request)
 	{
 		auto this_session = session_manager.getSessionInfo(request->client()->localIP(), request->client()->getRemoteAddress());
-		if (this_session == cst::session_manager.emptySession)
+		if (this_session == session_manager.emptySession)
 			return request->send(200, "text/plain", "Not logged in.");
 
 		request->send(200, "application/json", JSON.stringify(this_session.toJSON()));
@@ -64,7 +64,7 @@ namespace cst
 	void handle_dir(AsyncWebServerRequest *request)
 	{
 		auto mountpoint = request->getParam("disk")->value().c_str();
-		auto disk_info = cst::get_instance(mountpoint);
+		auto disk_info = get_instance(mountpoint);
 		if (!disk_info.success)
 			return request->send(404, "text/plain", "404: invalid disk");
 		const auto &dir_path = request->getParam("path")->value();
@@ -95,7 +95,7 @@ namespace cst
 	void handle_file(AsyncWebServerRequest *request)
 	{
 		auto mountpoint = request->getParam("disk")->value().c_str();
-		auto disk_info = cst::get_instance(mountpoint);
+		auto disk_info = get_instance(mountpoint);
 
 		if (!disk_info.success)
 			return request->send(404, "text/plain", "404: invalid disk");
@@ -109,7 +109,7 @@ namespace cst
 		if (action == "download")
 			return request->send(*disk_info.instance, dir_path, emptyString, true);
 		if (action == "delete")
-			return request->send(200, "text/plain", "Deleted " + String(cst::recursive_delete(*disk_info.instance, disk_info.instance->open(dir_path))) + " files");
+			return request->send(200, "text/plain", "Deleted " + String(recursive_delete(*disk_info.instance, disk_info.instance->open(dir_path))) + " files");
 
 		request->send(404, "text/plain", "404: invalid param");
 	}
@@ -141,7 +141,7 @@ namespace cst
 			if (!disk_info.success)
 				return request->send(404, "text/plain", "404: invalid disk");
 			auto path = request->getParam("path")->value();
-			if (!(request->_tempFile = disk_info.instance->open(path, FILE_WRITE)))
+			if (!(request->_tempFile = disk_info.instance->open(path + "/" + filename, FILE_WRITE)))
 				return request->send(404, "text/plain", "404: invalid path");
 		}
 		request->_tempFile.write(data, len);
@@ -150,6 +150,8 @@ namespace cst
 			request->_tempFile.close();
 		}
 	}
+
+	void handle_post_request(AsyncWebServerRequest *request) { request->send(200); }
 
 	void begin_network()
 	{
@@ -165,7 +167,7 @@ namespace cst
 		server.serveStatic("/", system_disk, (system_dir + "/webpage").c_str()).setDefaultFile("index.html");
 		server.on("/dir", HTTP_GET, handle_dir);
 		server.on("/file", HTTP_GET, handle_file);
-		server.on("/file", HTTP_POST, nullptr, handle_file_upload, nullptr);
+		server.on("/file", HTTP_POST, handle_post_request, handle_file_upload);
 		server.on("/login", HTTP_POST, nullptr, nullptr, handle_login);
 		server.on("/logoff", HTTP_GET, handle_logoff);
 		server.on("/register", HTTP_POST, nullptr, nullptr, handle_register);
