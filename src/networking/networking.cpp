@@ -15,18 +15,18 @@ namespace cst
 
 	void handle_login(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
 	{
-		auto rcv_data = JSON.parse(reinterpret_cast<const char *>(data));
+		auto rcv_data = JSON.parse(reinterpret_cast<const char *>(data)); // TODO: use in C++ 20 std::bit_cast
 		auto rcv_id = static_cast<const char *>(rcv_data["id"]),
 			 rcv_pwd = static_cast<const char *>(rcv_data["pw"]);
 		if (!login_auth(rcv_id, rcv_pwd))
 			return request->send(200, "text/plain", "Authentication failed: incorrect username/password.");
-		auto &new_session = session_manager.newSession(request->client()->localIP(), request->client()->getRemoteAddress(), rcv_id);
+		auto &new_session = session_manager.new_session(request->client()->localIP(), request->client()->getRemoteAddress(), rcv_id);
 		request->send(200, "text/plain", "Login success: hello, " + new_session._userID);
 	}
 
 	void get_login_info(AsyncWebServerRequest *request)
 	{
-		auto this_session = session_manager.getSessionInfo(request->client()->localIP(), request->client()->getRemoteAddress());
+		auto this_session = session_manager.get_session_info(request->client()->localIP(), request->client()->getRemoteAddress());
 		if (this_session == session_manager.emptySession)
 			return request->send(200, "text/plain", "Not logged in.");
 
@@ -35,13 +35,13 @@ namespace cst
 
 	void handle_logoff(AsyncWebServerRequest *request)
 	{
-		session_manager.removeSession(request->client()->localIP(), request->client()->getRemoteAddress());
+		session_manager.remove_session(request->client()->localIP(), request->client()->getRemoteAddress());
 		return request->send(200);
 	}
 
 	void handle_register(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
 	{
-		auto reg_info = JSON.parse(reinterpret_cast<const char *>(data));
+		auto reg_info = JSON.parse(reinterpret_cast<const char *>(data)); // TODO: use in C++ 20 std::bit_cast
 		auto reg_path = credentials_dir + static_cast<const char *>(reg_info["id"]);
 		if (system_disk.exists(reg_path))
 			return request->send(200, "text/plain", "Registration falied: username taken");
@@ -51,7 +51,7 @@ namespace cst
 
 	void handle_delete_account(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
 	{
-		auto del_info = JSON.parse(reinterpret_cast<const char *>(data));
+		auto del_info = JSON.parse(reinterpret_cast<const char *>(data)); // TODO: use in C++ 20 std::bit_cast
 		auto del_file = system_disk.open(credentials_dir + static_cast<const char *>(del_info["id"]));
 		if (!del_file && del_file.readString() != static_cast<const char *>(del_info["pw"]))
 			return request->send(200, "text/plain", "Deletion falied: user not exist");
@@ -73,7 +73,7 @@ namespace cst
 
 		JSONVar files_JSON;
 		size_t counter = 0;
-		auto JSON_fn = [&](File &f)
+		auto dir_json_fn = [&](File &f)
 		{
 			files_JSON[counter]["name"] = f.name();
 			files_JSON[counter]["path"] = f.path();
@@ -83,7 +83,7 @@ namespace cst
 			files_JSON[counter]["mod"] = f.getLastWrite();
 			++counter;
 		};
-		forward_fs_iterator(disk_info.instance->open(dir_path), JSON_fn);
+		forward_fs_iterator(disk_info.instance->open(dir_path), dir_json_fn);
 		request->send(200, "application/json", JSON.stringify(files_JSON));
 	}
 
