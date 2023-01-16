@@ -62,7 +62,7 @@ fluent-card {
 	margin: 0.25%;
 }
 
-tr:hover,
+tbody tr:hover,
 fluent-tab:hover,
 fluent-button:hover,
 fluent-card:hover {

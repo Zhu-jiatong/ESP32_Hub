@@ -2,7 +2,7 @@ const module_html_url = new URL("/assets/modules/file-upload-form/file-upload-fo
 fetch(module_html_url).then(res => res.text()).then(data => {
     _("upload-files-form").innerHTML = data;
 }).then(() => {
-    _("fileForm").addEventListener("change", uploadFormEvent);
+    _("fileForm").addEventListener("change", e => { files_queue = [...e.target.files]; uploadFormEvent(e); });
     _("upload-cover").addEventListener("click", e => {
         e.preventDefault();
         _("file-input").click();
@@ -13,19 +13,17 @@ fetch(module_html_url).then(res => res.text()).then(data => {
     });
 });
 
+var files_queue = [];
+var queue_indx = 0;
+
 function uploadFormEvent(e) {
     let total_size = 0;
     const upFileInfo = document.createDocumentFragment();
-    const table_file_head = upFileInfo.appendChild(document.createElement('tr'));
-    table_file_head.appendChild(document.createElement('th'));
-    table_file_head.appendChild(document.createElement('th')).textContent = 'Name';
-    table_file_head.appendChild(document.createElement('th')).textContent = 'Size (bytes)';
-    let files_arr = Array.from(e.target.files);
-    files_arr.forEach(file => {
+    files_queue.forEach(file => {
         const table_file_row = upFileInfo.appendChild(document.createElement('tr'));
         table_file_row.addEventListener("click", () => {
             console.log(file);
-            files_arr.splice(files_arr.indexOf(file), 1);
+            files_queue.splice(files_queue.indexOf(file), 1);
             uploadFormEvent(e);
         });
         const tableFileRowIcon = table_file_row.appendChild(document.createElement('td'));
@@ -34,46 +32,81 @@ function uploadFormEvent(e) {
         tableFileRowIcon.classList.add('fIcon');
         table_file_row.appendChild(document.createElement('td')).textContent = file.name;
         table_file_row.appendChild(document.createElement('td')).textContent = file.size;
+        const progress_cell = table_file_row.appendChild(document.createElement("td"));
+        progress_cell.classList.add("file-progress");
+        progress_cell.textContent = "-";
         total_size += file.size;
     });
     upFileInfo.appendChild(document.createElement('td'));
-    upFileInfo.appendChild(document.createElement('th')).textContent = e.target.files.length;
+    upFileInfo.appendChild(document.createElement('th')).textContent = files_queue.length;
     upFileInfo.appendChild(document.createElement('th')).textContent = total_size;
     _('uploadTabFiles').replaceChildren(upFileInfo);
 }
 
 function uploadFile() {
+    queue_indx = 0;
+    let i = 0;
+    _("uploadTabFiles").querySelectorAll(".file-progress").forEach(e => {
+        const ring = document.createElement("fluent-progress-ring");
+        ring.classList.add(i);
+        e.replaceChildren(ring);
+        ++i;
+    });
+    upload_recursive();
+}
+
+function upload_recursive() {
+    if (queue_indx >= files_queue.length)
+        return;
+    const elem = _("uploadTabFiles").getElementsByClassName(queue_indx)[0];
+    const formDat = new FormData();
+    formDat.set("file", files_queue[queue_indx]);
     var xhr = new XMLHttpRequest();
-    xhr.upload.addEventListener("progress", progressHandler, false);
-    xhr.addEventListener("load", completeHandler, false);
-    xhr.addEventListener("error", errorHandler, false);
-    xhr.addEventListener("abort", abortHandler, false);
+    xhr.upload.addEventListener("progress", e => progressHandler(e, elem), false);
+    xhr.addEventListener("load", e => completeHandler(e, elem), false);
+    xhr.addEventListener("error", () => errorHandler(elem), false);
+    xhr.addEventListener("abort", () => abortHandler(elem), false);
     const url = new URL('/file', window.location.origin);
     url.searchParams.append("disk", current_disk);
     url.searchParams.append('path', current_dir);
     xhr.open("POST", url);
-    xhr.send(new FormData(_('fileForm')));
+    xhr.send(formDat);
 }
 
-function progressHandler(e) {
-    _('loaded_n_total').textContent = 'Uploaded ' + adjust_size(e.loaded) + '/' + adjust_size(e.total);
+function progressHandler(e, elem) {
+    elem.max = e.total;
+    elem.value = e.loaded;
+/*     _('loaded_n_total').textContent = 'Uploaded ' + adjust_size(e.loaded) + '/' + adjust_size(e.total);
     _('progressBar').hidden = false;
     _('progressBar').max = e.total;
     _('progressBar').value = e.loaded;
     _('status').textContent = Math.round((e.loaded / e.total) * 100) + '% uploaded... please wait';
     if (e.loaded >= e.total)
         _('status').textContent = 'Please wait, writing file to filesystem';
-}
-function completeHandler(event) {
-    _("status").textContent = "Upload Complete";
-    _("progressBar").value = 0;
-    _('progressBar').hidden = true;
-    _("status").textContent = "File Uploaded";
+ */}
+function completeHandler(e, elem) {
+    const done_ico = document.createElement("span");
+    done_ico.innerHTML = "&#xe930;";
+    done_ico.classList.add("fluent-font");
+    elem.replaceWith(done_ico);
+    ++queue_indx;
+    upload_recursive();
     dir_dom(current_dir);
 }
-function errorHandler(event) {
-    _("status").textContent = "Upload Failed";
+function errorHandler(elem) {
+    elem.classList.add("fluent-font");
+    const err_ico = document.createElement("span");
+    err_ico.innerHTML = "&#xea39;";
+    err_ico.classList.add("fluent-font");
+    elem.replaceWith(err_ico);
+    ++queue_indx;
+    upload_recursive();
 }
-function abortHandler(event) {
-    _("status").textContent = "inUpload Aborted";
+
+function abortHandler(elem) {
+    const err_ico = document.createElement("span");
+    err_ico.innerHTML = "&#xea39;";
+    err_ico.classList.add("fluent-font");
+    elem.replaceWith(err_ico);
+    ++queue_indx;
 }
